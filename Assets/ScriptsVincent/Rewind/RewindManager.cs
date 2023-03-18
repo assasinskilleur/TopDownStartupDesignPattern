@@ -2,26 +2,42 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NaughtyAttributes;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 
 public class RewindManager : MonoBehaviour
 {
+    public static bool IsRewind { get; private set; }
     public event Action LaunchRewind;
     public event Action StopRewind;
     
-    private float m_startTime;
-    private float m_currentTimeRewinded;
+    [SerializeField][ReadOnly]
     private List<GameAction> m_gameActions;
-    private float m_totalTimeRewinded;
-
-    private float GameTime => Time.time - m_totalTimeRewinded;
-
     [SerializeField] private float m_maxTimeRewind;
 
-    public static bool IsRewind { get; private set; }
-    private float NormalizedRewindValue => m_currentTimeRewinded / m_maxTimeRewind;
+    private float m_gameTime;
+    private float m_maxGameTimeReached;
+
+    private float MinGameTime
+    {
+        get
+        {
+            float l_minGameTime = m_maxGameTimeReached - m_maxTimeRewind;
+            return (l_minGameTime > 0 ? l_minGameTime : 0);
+        }
+    }
+
+    private float CurrentRewindState
+    {
+        get
+        {
+            float l_a = Mathf.InverseLerp(MinGameTime, m_maxGameTimeReached, m_gameTime);
+            return l_a;
+        }
+    } 
 
     [SerializeField] private UIRewind m_UI;
 
@@ -32,32 +48,37 @@ public class RewindManager : MonoBehaviour
 
     private void Update()
     {
-        if (m_maxTimeRewind < GameTime)
+        switch (IsRewind)
         {
-            RemoveOldActions();
+            case false :
+                m_gameTime += Time.deltaTime;
+                if (m_gameTime > m_maxGameTimeReached)
+                {
+                    m_maxGameTimeReached = m_gameTime;
+                    RemoveOldActions();
+                }
+                break;
+            
+            case true:
+                m_gameTime -= Time.deltaTime;
+                if (m_gameTime < MinGameTime)
+                {
+                    IsRewind = false;
+                    break;
+                }
+                Rewind();
+                break;
         }
-        
-        if (IsRewind)
-        {
-            m_currentTimeRewinded += Time.deltaTime;
-            m_totalTimeRewinded += Time.deltaTime;
-            Rewind();
-        }
-        else
-        {
-            m_currentTimeRewinded -= Time.deltaTime;
-        }
-
-        m_currentTimeRewinded = Mathf.Clamp(m_currentTimeRewinded, 0, m_maxTimeRewind);
-        m_UI?.UpdateFill(1 - NormalizedRewindValue);
+        m_UI?.UpdateFill(CurrentRewindState);
     }
+    
 
     private void RemoveOldActions()
     {
         if (IsRewind || !m_gameActions.Any())
             return;
         
-        if (m_gameActions[^1].GameTime < GameTime - m_maxTimeRewind)
+        if (m_gameActions[^1].GameTime < MinGameTime)
         {
             Debug.Log("Remove");
             m_gameActions.RemoveAt(m_gameActions.Count - 1);
@@ -73,19 +94,19 @@ public class RewindManager : MonoBehaviour
 
 
 
-    public void AddAction(Action p_action, float p_time)
+    public void AddAction(string p_name, Action p_action)
     {
         GameAction l_gameAction = new GameAction();
+        l_gameAction.Name = p_name;
+        l_gameAction.GameTime = m_gameTime;
         l_gameAction.A += p_action;
-        l_gameAction.GameTime = p_time - m_totalTimeRewinded;
-        
+
         m_gameActions.Insert(0,l_gameAction);
     }
 
     private void StartRewind(InputAction.CallbackContext p_context)
     {
         IsRewind = true;
-        m_startTime = GameTime;
         OnStartRewind();
     }
 
@@ -101,9 +122,8 @@ public class RewindManager : MonoBehaviour
     
     private void PlayLastAction()
     {
-        Debug.Log(m_currentTimeRewinded);
         if (!m_gameActions.Any()
-            || m_gameActions[0].GameTime < m_startTime - m_currentTimeRewinded)
+            || m_gameActions[0].GameTime < m_gameTime)
             return;
         
         m_gameActions[0].Play();
@@ -115,7 +135,6 @@ public class RewindManager : MonoBehaviour
     private void EndRewind(InputAction.CallbackContext p_context)
     {
         IsRewind = false;
-
         OnEndRewind();
     }
     
@@ -125,9 +144,15 @@ public class RewindManager : MonoBehaviour
     }
 }
 
+[Serializable]
 public class GameAction
 {
-    public float GameTime { get; set; }
+    [SerializeField]
+    private string m_name;
+    [SerializeField]
+    private float m_gameTime;
+    public string Name { get => m_name; set => m_name = value; }
+    public float GameTime { get => m_gameTime; set => m_gameTime = value; }
     public event Action A;
     public event Action DeleteAction;
 
