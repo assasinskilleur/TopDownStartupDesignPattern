@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class Score : MonoBehaviour
 {
-    [SerializeField] private Text m_scoreField;
+    [SerializeField] private TextMeshPro m_scoreField;
     [SerializeField] private UI m_ui;
 
     private int m_playerScore = 0;
