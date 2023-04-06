@@ -9,13 +9,13 @@ public class InputsInjector : MonoBehaviour
 
     public enum InputType
     {
-        Player,UI
+        PLAYER,UI
     }
 
     private InputActions m_inputs;
     [SerializeField] private PlayerMovements m_playerMovements;
     [SerializeField] private RewindManager m_rewindManager;
-    
+    [SerializeField] private UI m_ui;
     
     void Start()
     {
@@ -23,18 +23,25 @@ public class InputsInjector : MonoBehaviour
         m_inputs.Enable();
         m_playerMovements.RegisterInputs(m_inputs);
         m_rewindManager.RegisterInputs(m_inputs);
+        m_ui.ChangeInput += SwitchInput;
+        m_ui.RegisterInputs(m_inputs);
+    }
+
+    private void OnDestroy()
+    {
+        m_ui.ChangeInput -= SwitchInput;
     }
 
     void SwitchInput(InputType p_inputType)
     {
         switch (p_inputType)
         {
-            case InputType.Player:
-                m_inputs.PLAYER.Enable();
+            case InputType.PLAYER:
+                m_inputs.Player.Enable();
                 m_inputs.UI.Disable();
                 break;
             case InputType.UI:
-                m_inputs.PLAYER.Disable();
+                m_inputs.Player.Disable();
                 m_inputs.UI.Enable();
                 break;
             default:
