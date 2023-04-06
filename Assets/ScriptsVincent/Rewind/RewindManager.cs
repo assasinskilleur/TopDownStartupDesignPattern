@@ -11,12 +11,15 @@ using UnityEngine.InputSystem;
 public class RewindManager : MonoBehaviour
 {
     public static bool IsRewind { get; private set; }
-    public event Action LaunchRewind;
-    public event Action StopRewind;
+    public event Action OnLaunchRewind;
+    public event Action OnStopRewind;
+
+    public event Action<float> OnUpdateRewind;
     
     [SerializeField][ReadOnly]
     private List<GameAction> m_gameActions;
     [SerializeField] private float m_maxTimeRewind;
+    [SerializeField] private RewindManagerReference m_reference;
 
     private float m_gameTime;
     private float m_maxGameTimeReached;
@@ -37,9 +40,12 @@ public class RewindManager : MonoBehaviour
             float l_a = Mathf.InverseLerp(MinGameTime, m_maxGameTimeReached, m_gameTime);
             return l_a;
         }
-    } 
+    }
 
-    [SerializeField] private UIRewind m_UI;
+    private void Awake()
+    {
+        (m_reference as IReferenceHead<RewindManager>).Set(this);
+    }
 
     private void Start()
     {
@@ -69,7 +75,7 @@ public class RewindManager : MonoBehaviour
                 Rewind();
                 break;
         }
-        m_UI?.UpdateFill(CurrentRewindState);
+        OnUpdateRewind?.Invoke(CurrentRewindState);
     }
     
 
@@ -112,7 +118,7 @@ public class RewindManager : MonoBehaviour
 
     private void OnStartRewind()
     {
-        LaunchRewind?.Invoke();
+        OnLaunchRewind?.Invoke();
     }
 
     private void Rewind()
@@ -140,7 +146,7 @@ public class RewindManager : MonoBehaviour
     
     private void OnEndRewind()
     {
-        StopRewind?.Invoke();
+        OnStopRewind?.Invoke();
     }
 }
 

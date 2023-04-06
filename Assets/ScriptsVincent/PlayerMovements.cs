@@ -9,7 +9,7 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerMovements : MonoBehaviour
 {
-    [SerializeField] private RewindManager m_rewind;
+    [SerializeField] private RewindManagerReference m_rewind;
 
     [SerializeField] private float m_speed;
     private Vector2 m_playerVelocity;
@@ -23,15 +23,15 @@ public class PlayerMovements : MonoBehaviour
     private void Start()
     {
         m_rb = GetComponent<Rigidbody2D>();
-        m_rewind.LaunchRewind += InvertVelocity;
-        m_rewind.StopRewind += OnStopRewind;
+        m_rewind.Acquire().OnLaunchRewind += InvertVelocity;
+        m_rewind.Acquire().OnStopRewind += OnStopRewind;
         m_currentDelay = m_delaySavePos;
     }
 
     private void OnDestroy()
     {
-        m_rewind.LaunchRewind -= InvertVelocity;
-        m_rewind.StopRewind -= OnStopRewind;
+        m_rewind.Acquire().OnLaunchRewind -= InvertVelocity;
+        m_rewind.Acquire().OnStopRewind -= OnStopRewind;
     }
 
     private void FixedUpdate()
@@ -80,13 +80,13 @@ public class PlayerMovements : MonoBehaviour
 
     private void AddRewindMove(Vector3 p_direction)
     {
-        m_rewind.AddAction(String.Concat("Move ", p_direction), () => Move(-p_direction));
+        m_rewind.Acquire().AddAction(String.Concat("Move ", p_direction), () => Move(-p_direction));
     }
 
     private void RegisterPosition()
     {
         Vector3 l_pos = transform.position;
-        m_rewind.AddAction("Save Position", () => transform.position = l_pos);
+        m_rewind.Acquire().AddAction("Save Position", () => transform.position = l_pos);
     }
 
     private void InvertVelocity()
