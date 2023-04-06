@@ -16,11 +16,16 @@ public class PlayerMovements : MonoBehaviour
     private Vector2 m_directionInputs;
     private Rigidbody2D m_rb;
 
+    [SerializeField]
+    private float m_delaySavePos;
+    private float m_currentDelay;
+
     private void Start()
     {
         m_rb = GetComponent<Rigidbody2D>();
         m_rewind.LaunchRewind += InvertVelocity;
         m_rewind.StopRewind += OnStopRewind;
+        m_currentDelay = m_delaySavePos;
     }
 
     private void OnDestroy()
@@ -32,6 +37,16 @@ public class PlayerMovements : MonoBehaviour
     private void FixedUpdate()
     {
         m_rb.velocity = m_playerVelocity * Time.fixedDeltaTime;
+
+        if (!RewindManager.IsRewind)
+        {
+            m_currentDelay -= Time.fixedDeltaTime;
+            if (m_currentDelay <= 0)
+            {
+                m_currentDelay = m_delaySavePos;
+                RegisterPosition();
+            }
+        }
     }
 
     public void RegisterInputs(InputActions p_inputActions)
@@ -66,6 +81,12 @@ public class PlayerMovements : MonoBehaviour
     private void AddRewindMove(Vector3 p_direction)
     {
         m_rewind.AddAction(String.Concat("Move ", p_direction), () => Move(-p_direction));
+    }
+
+    private void RegisterPosition()
+    {
+        Vector3 l_pos = transform.position;
+        m_rewind.AddAction("Save Position", () => transform.position = l_pos);
     }
 
     private void InvertVelocity()
