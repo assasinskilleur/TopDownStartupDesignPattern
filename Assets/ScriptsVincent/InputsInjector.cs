@@ -8,7 +8,7 @@ public class InputsInjector : MonoBehaviour
 
     private InputActions m_inputs;
     [SerializeField] private PlayerMovements m_playerMovements;
-    [SerializeField] private RewindManager m_rewindManager;
+    [SerializeField] private RewindManagerReference m_rewindManager;
     
     
     void Start()
@@ -16,7 +16,7 @@ public class InputsInjector : MonoBehaviour
         m_inputs = new InputActions();
         m_inputs.Enable();
         m_playerMovements.RegisterInputs(m_inputs);
-        m_rewindManager.RegisterInputs(m_inputs);
+        m_rewindManager.Acquire().RegisterInputs(m_inputs);
     }
 
 }
