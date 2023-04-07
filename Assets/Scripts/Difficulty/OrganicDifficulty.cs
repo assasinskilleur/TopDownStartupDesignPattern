@@ -1,14 +1,15 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class OrganicDifficulty : MonoBehaviour
 {
-    [SerializeField] private OrganicDifficultyReference _organicDifficultyReference;
+    [SerializeField][Required] private OrganicDifficultyReference _organicDifficultyReference;
 
     private Difficulty _difficulty;
 
-    private int _tokentUpDown;
+    private int _tokentUpDown = 0;
     private float _lifeDownCount = 0;
     private int _deathCount = 0;
 
@@ -23,6 +24,15 @@ public class OrganicDifficulty : MonoBehaviour
     private void OnDestroy()
     {
         (_organicDifficultyReference as IReferenceHead<OrganicDifficulty>).Set(null);
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.A)) 
+        {
+            EnemyKill();
+            Debug.Log(_diff);
+        }
     }
 
     private void UpDownDiffyculty ()
@@ -65,6 +75,19 @@ public class OrganicDifficulty : MonoBehaviour
             _diff -= 0.1f;
             _tokentUpDown = 0;
         }
+
+        if(_diff == 0.5f)
+        {
+            _difficulty = Difficulty.easy;
+        }
+        if (_diff == 1f)
+        {
+            _difficulty = Difficulty.normal;
+        }
+        if (_diff == 2f)
+        {
+            _difficulty = Difficulty.hard;
+        }
     }
 
     public void EnemyKill()
@@ -78,7 +101,7 @@ public class OrganicDifficulty : MonoBehaviour
         _tokentUpDown -= 2;
         _deathCount++;
 
-        if (_deathCount < 20)
+        if (_deathCount > 2)
         {
             if (_minDiff>0.02f)
             {

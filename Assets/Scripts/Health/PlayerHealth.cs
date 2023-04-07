@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour, IHealth
 {
     [SerializeField] private PlayerReference _player;
+    [SerializeField] private OrganicDifficultyReference _diff;
 
     public event Action OnDeath;
     public event Action<float, float> OnDamage;
@@ -37,12 +38,13 @@ public class PlayerHealth : MonoBehaviour, IHealth
     {
         if (damage < 0) return;
         
-        _player.Acquire().Stats.CurrentHealth -= damage;
-        
+        _player.Acquire().Stats.CurrentHealth -= damage * _diff.Acquire()._diff;
+        _diff.Acquire().LifeDown(damage * _diff.Acquire()._diff);
         OnDamage?.Invoke(damage, _player.Acquire().Stats.CurrentHealth);
         
         if (_player.Acquire().Stats.CurrentHealth <= 0)
         {
+            _diff.Acquire().PlayerDeath();
             OnDeath?.Invoke();
         }
     }
