@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    [SerializeField] private PlayerStatsReference m_playerStatsReference;
-
     #region Base Values
     [HorizontalLine(color: EColor.Blue)]
     [Header("Base Values")]
@@ -21,13 +19,7 @@ public class PlayerStats : MonoBehaviour
 
     private void Awake()
     {
-        (m_playerStatsReference as IReferenceHead<PlayerStats>).Set(this);
         m_speed = new Alterable<float>(m_baseSpeed);
-    }
-    
-    private void OnDestroy()
-    {
-        (m_playerStatsReference as IReferenceHead<PlayerStats>).Set(null);
     }
     
     #endregion
