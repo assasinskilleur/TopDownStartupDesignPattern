@@ -14,6 +14,8 @@ public class Turrets : MonoBehaviour
     private bool m_isOut = false;
     private bool m_waitEndDelay = false;
 
+    [SerializeField] private OrganicDifficultyReference m_diff;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,12 +71,12 @@ public class Turrets : MonoBehaviour
         GameObject l_obj = m_pooler.ActiveObj(m_firepoint);
         l_obj.transform.parent = null;
 
-
+        
         StartCoroutine(DelayBullet());
     }
     IEnumerator DelayBullet()
     {
-        yield return new WaitForSeconds(m_delayBullet);
+        yield return new WaitForSeconds(m_delayBullet / m_diff.Acquire()._diff);
         m_waitEndDelay = false;
     }
 }
