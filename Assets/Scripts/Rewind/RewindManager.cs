@@ -55,8 +55,7 @@ public class RewindManager : MonoBehaviour
 
     private void Update()
     {
-
-        if (IsRewind)
+        if (!IsRewind)
         {
             m_gameTime += Time.deltaTime;
             if (m_gameTime > m_maxGameTimeReached)
@@ -64,7 +63,6 @@ public class RewindManager : MonoBehaviour
                 m_maxGameTimeReached = m_gameTime;
                 RemoveOldActions();
             }
-
         }
         else
         {
@@ -74,7 +72,6 @@ public class RewindManager : MonoBehaviour
                 IsRewind = false;
             }
             Rewind();
-
         }
 
         OnUpdateRewind?.Invoke(CurrentRewindState);
