@@ -10,10 +10,12 @@ public class Pooler_v2 : MonoBehaviour
     
     private List<GameObject> m_list;
 
+    private int m_currentObjActived = 0;
     private void Reset()
     {
         m_isActived = false;
         m_maxInstanciation = 10;
+        m_currentObjActived = 0;
     }
     // Start is called before the first frame update
 
@@ -33,7 +35,8 @@ public class Pooler_v2 : MonoBehaviour
     {
         for (int i = 0; i < m_maxInstanciation; i++)
         {
-            GameObject l_obj = Instantiate(obj, transform);
+            GameObject l_obj = Instantiate(obj);
+            l_obj.transform.parent = transform;
             m_list.Add(l_obj);
             m_list[i].SetActive(false);
         }
@@ -49,10 +52,16 @@ public class Pooler_v2 : MonoBehaviour
 
             if (m_list[i].activeInHierarchy == false)
             {
+                l_obj.transform.localScale = m_prefab.transform.localScale;
+                l_obj.transform.parent = null;
+                l_obj.transform.parent = l_parentObj.transform;
+
                 l_obj.transform.position = l_parentObj.transform.position;
                 l_obj.transform.rotation = l_parentObj.transform.rotation;
 
                 l_obj.SetActive(true);
+
+                m_currentObjActived++;
                 break;
             }
         }
@@ -61,12 +70,18 @@ public class Pooler_v2 : MonoBehaviour
 
     public void DeactiveObj(GameObject obj)
     {
-        if (obj.activeInHierarchy)
+        if (obj.activeInHierarchy == true)
         {
-            obj.SetActive(false);
             obj.transform.localScale =  m_prefab.transform.localScale;
+
+            obj.transform.parent = null;
+            obj.transform.parent = transform;
+
             obj.transform.position = transform.position;
             obj.transform.rotation = transform.rotation;
+            
+
+            obj.SetActive(false);
         }
     }
 }
