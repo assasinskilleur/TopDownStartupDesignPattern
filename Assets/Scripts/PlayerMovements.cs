@@ -9,7 +9,6 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerMovements : MonoBehaviour, IRewindable
 {
-    [SerializeField] private PlayerStatsReference m_playerStats;
     [SerializeField] private RewindManagerReference m_rewind;
 
     [SerializeField] private float m_speed;
