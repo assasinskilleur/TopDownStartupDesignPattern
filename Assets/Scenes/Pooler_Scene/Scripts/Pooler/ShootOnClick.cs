@@ -24,11 +24,10 @@ public class ShootOnClick : MonoBehaviour
     void Update()
     {
         var l_dir = Input.mousePosition - m_camera.WorldToScreenPoint(m_firepointParent.transform.position);
+
         var l_angle = Mathf.Atan2(l_dir.y, l_dir.x) * Mathf.Rad2Deg;
         m_firepointParent.transform.rotation = Quaternion.AngleAxis(l_angle + 90, Vector3.forward);
-
-        Debug.Log(m_firepointParent.transform.rotation.eulerAngles);
-
+        
         if (Input.GetKey(KeyCode.Mouse0))
         {
             if (m_waitEndDelay) { return; }
@@ -55,9 +54,6 @@ public class ShootOnClick : MonoBehaviour
             m_pooler.ActiveObj(m_firepoint);
         }
         
-
-        
-
         StartCoroutine(DelayBullet());
     }
     IEnumerator DelayBullet()
