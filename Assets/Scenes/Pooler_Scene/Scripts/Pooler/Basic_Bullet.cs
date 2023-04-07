@@ -48,6 +48,9 @@ public class Basic_Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-       m_pooler.DeactiveObj(gameObject);
+       if(collision.gameObject.layer != 6)
+        {
+            m_pooler.DeactiveObj(gameObject);
+        }
     }
 }

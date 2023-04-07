@@ -52,7 +52,7 @@ public class Pooler_v2 : MonoBehaviour
 
             if (m_list[i].activeInHierarchy == false)
             {
-                
+                l_obj.transform.localScale = m_prefab.transform.localScale;
                 l_obj.transform.parent = null;
                 l_obj.transform.parent = l_parentObj.transform;
 
