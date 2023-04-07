@@ -79,6 +79,7 @@ public class OrganicDifficulty : MonoBehaviour
     void EnemyKill()
     {
         _tokentUpDown++;
+        UpDownDiffyculty();
     }
 
     void PlayerDeath()
@@ -94,6 +95,7 @@ public class OrganicDifficulty : MonoBehaviour
             }
             _deathCount = 0;
         }
+        UpDownDiffyculty();
     }
 
     void LifeDown(float takeDamage)
@@ -105,6 +107,7 @@ public class OrganicDifficulty : MonoBehaviour
             _tokentUpDown--;
             _lifeDownCount -= 200;
         }
+        UpDownDiffyculty();
     }
 
 }

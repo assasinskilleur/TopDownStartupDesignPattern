@@ -25,10 +25,23 @@ public class Health : MonoBehaviour, IHealth
     public event Action<int> OnRegen;
     public event Action OnDie;
 
+    private void Awake()
+    {
+        if (gameObject.tag == "Enemy")
+        {
+            //set life enemy by diff
+        }
+    }
+
     public void Damage(int amount)
     {
         Assert.IsTrue(amount >= 0);
         if (IsDead) return;
+
+        if(gameObject.tag == "Player")
+        {
+            //LifeDown()
+        }
 
         CurrentHealth = Mathf.Max(0, CurrentHealth - amount);
         OnDamage?.Invoke(amount);
@@ -63,6 +76,16 @@ public class Health : MonoBehaviour, IHealth
     void InternalDie()
     {
         if (!IsDead) return;
+
+        if (gameObject.tag == "Player")
+        {
+            //PlayerDeath()
+        }
+        else if (gameObject.tag == "Enemy")
+        {
+            //EnemyKill()
+        }
+
         OnDie?.Invoke();
     }
 }
