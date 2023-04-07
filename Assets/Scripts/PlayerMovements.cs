@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
-public class PlayerMovements : MonoBehaviour
+public class PlayerMovements : MonoBehaviour, IRewindable
 {
     [SerializeField] private PlayerStatsReference m_playerStats;
     [SerializeField] private RewindManagerReference m_rewind;
@@ -55,9 +55,6 @@ public class PlayerMovements : MonoBehaviour
                     m_currentDelay = m_delaySavePos;
                     RegisterPosition();
                 }
-
-                
-                
             }
         }
     }
@@ -69,7 +66,7 @@ public class PlayerMovements : MonoBehaviour
             if (m_oldVelocity != m_rb.velocity)
             {
                 Debug.Log("AddRewind");
-                AddRewindMove(m_oldVelocity);
+                AddRewindAction(m_oldVelocity);
                 m_oldVelocity = m_rb.velocity;
             }
         }
@@ -89,7 +86,7 @@ public class PlayerMovements : MonoBehaviour
         Move(m_directionInputs * m_speed);
     }
 
-    private void OnStartRewind()
+    public void OnStartRewind()
     {
         Move(-m_rb.velocity);
         foreach (Collider2D l_col in m_colliders)
@@ -98,15 +95,15 @@ public class PlayerMovements : MonoBehaviour
         }
     }
     
-    private void OnStopRewind()
+    public void OnStopRewind()
     {
         foreach (Collider2D l_col in m_colliders)
         {
             l_col.enabled = true;
         }
-        AddRewindMove(-m_newPlayerVelocity);
+        AddRewindAction(-m_newPlayerVelocity);
         Move(m_directionInputs * m_speed);
-        AddRewindMove(m_newPlayerVelocity);
+        AddRewindAction(m_newPlayerVelocity);
     }
 
     private void Move(Vector2 p_velocity)
@@ -114,9 +111,10 @@ public class PlayerMovements : MonoBehaviour
         m_newPlayerVelocity = p_velocity;
     }
 
-    private void AddRewindMove(Vector3 p_velocity)
+    public void AddRewindAction(object p_velocity)
     {
-        m_rewind.Acquire().AddAction(String.Concat("Move ", p_velocity), () => Move(-p_velocity));
+        Vector2 l_vector = (Vector2)p_velocity;
+        m_rewind.Acquire().AddAction(String.Concat("Move ", p_velocity), () => Move(-l_vector));
     }
 
     private void RegisterPosition()
