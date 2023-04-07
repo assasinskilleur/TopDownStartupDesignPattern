@@ -169,7 +169,7 @@ MonoBehaviour:
   - {x: 0.2958265, y: -0.2958265, z: 0}
   m_ShapePathHash: 1522865524
   m_Mesh: {fileID: 0}
-  m_InstanceId: -1504
+  m_InstanceId: -607662
 --- !u!1 &2610850215357056001
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,7 +581,7 @@ MonoBehaviour:
   m_baseSpeed: 500
   m_baseHealth: 100
   m_baseRegen: 1
-  m_baseDamage: 5
+  m_baseDamage: 25
   m_baseAttackSpeed: 1
 --- !u!114 &1374763826
 MonoBehaviour:
@@ -596,6 +596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 11400000, guid: 82693ae4365045f48abecdeb9b5c51e7, type: 2}
+  _diff: {fileID: 11400000, guid: 3e1692a49485b2844897776c08b53b69, type: 2}
 --- !u!114 &1374763827
 MonoBehaviour:
   m_ObjectHideFlags: 0

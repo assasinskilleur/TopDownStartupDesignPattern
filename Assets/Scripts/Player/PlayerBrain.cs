@@ -2,6 +2,7 @@ using System;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerBrain : MonoBehaviour
 {
@@ -22,7 +23,12 @@ public class PlayerBrain : MonoBehaviour
     {
         (m_playerReference as IReferenceHead<PlayerBrain>).Set(this);
         
-        m_playerHealth.OnDamage += (damage, health) => Debug.Log($"Player took {damage} damage, current health: {health}");
+        Health.OnDeath += OnPlayerDeath;
+    }
+
+    private void OnPlayerDeath()
+    {
+        SceneManager.LoadScene(0);
     }
 
     private void Update()
