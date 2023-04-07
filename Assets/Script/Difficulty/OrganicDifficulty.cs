@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class OrganicDifficulty : MonoBehaviour
 {
-    [SerializeField]private Difficulty _difficulty;
+    [SerializeField] private OrganicDifficultyReference _organicDifficultyReference;
+
+    private Difficulty _difficulty;
 
     private int _tokentUpDown;
     private float _lifeDownCount = 0;
@@ -15,25 +17,14 @@ public class OrganicDifficulty : MonoBehaviour
 
     private void Awake()
     {
-        switch(_difficulty)
-        {
-            case Difficulty.easy:
-                _minDiff = 0.5f;
-                _diff = _minDiff;
-                break;
-
-            case Difficulty.normal:
-                _minDiff = 1;
-                _diff = _minDiff;
-                break;
-
-            case Difficulty.hard:
-                _minDiff = 2;
-                _diff = _minDiff;
-                break;
-        }
+        (_organicDifficultyReference as IReferenceHead<OrganicDifficulty>).Set(this);
     }
-    
+
+    private void OnDestroy()
+    {
+        (_organicDifficultyReference as IReferenceHead<OrganicDifficulty>).Set(null);
+    }
+
     private void UpDownDiffyculty ()
     {
         if(_tokentUpDown >= 10)
@@ -76,13 +67,13 @@ public class OrganicDifficulty : MonoBehaviour
         }
     }
 
-    void EnemyKill()
+    public void EnemyKill()
     {
         _tokentUpDown++;
         UpDownDiffyculty();
     }
 
-    void PlayerDeath()
+    public void PlayerDeath()
     {
         _tokentUpDown -= 2;
         _deathCount++;
@@ -98,7 +89,7 @@ public class OrganicDifficulty : MonoBehaviour
         UpDownDiffyculty();
     }
 
-    void LifeDown(float takeDamage)
+    public void LifeDown(float takeDamage)
     {
         _lifeDownCount += takeDamage;
         
@@ -110,6 +101,27 @@ public class OrganicDifficulty : MonoBehaviour
         UpDownDiffyculty();
     }
 
+    public void SetDifficulty(Difficulty p_difficulty)
+    {
+        _difficulty = p_difficulty;
+        switch (_difficulty)
+        {
+            case Difficulty.easy:
+                _minDiff = 0.5f;
+                _diff = _minDiff;
+                break;
+
+            case Difficulty.normal:
+                _minDiff = 1;
+                _diff = _minDiff;
+                break;
+
+            case Difficulty.hard:
+                _minDiff = 2;
+                _diff = _minDiff;
+                break;
+        }
+    }
 }
 
 public enum Difficulty
