@@ -20,7 +20,7 @@ public class LootBox : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D col)
     {
         Debug.Log(col.name);
-        if (col.TryGetComponent(out PlayerStats playerStats))
+        if (col.TryGetComponent(out PlayerHealthProxy playerHealthProxy))
         {
             m_spriteRenderer.sprite = m_openedSprite;
             m_boxCollider2D.enabled = false;

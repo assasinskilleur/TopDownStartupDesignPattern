@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cef74b5ec43fa314b81775d03767f8bb, type: 3}
   m_Name: DoubleSpeedAugment
   m_EditorClassIdentifier: 
-  m_playerStats: {fileID: 11400000, guid: 6d2c80928a0646a4abaa9ecb1b248318, type: 2}
+  m_player: {fileID: 11400000, guid: 82693ae4365045f48abecdeb9b5c51e7, type: 2}
   m_modifierType: 1
   m_speedModifier: 2
   m_weight: 2

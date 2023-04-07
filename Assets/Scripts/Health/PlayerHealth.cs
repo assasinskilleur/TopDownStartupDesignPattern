@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour, IHealth
 {
-    [SerializeField] private PlayerStatsReference _playerStats;
+    [SerializeField] private PlayerReference _player;
 
     public event Action OnDeath;
     public event Action<float, float> OnDamage;
@@ -20,13 +20,13 @@ public class PlayerHealth : MonoBehaviour, IHealth
     
     private void AutoRegen()
     {
-        if (_playerStats.Acquire().CurrentHealth <= 0) return;
+        if (_player.Acquire().Stats.CurrentHealth <= 0) return;
         
-        if (_playerStats.Acquire().CurrentHealth >= _playerStats.Acquire().MaxHealth) return;
+        if (_player.Acquire().Stats.CurrentHealth >= _player.Acquire().Stats.MaxHealth) return;
         
         if (_regenTimer >= _regenTime)
         {
-            Heal(_playerStats.Acquire().Regen);
+            Heal(_player.Acquire().Stats.Regen);
             _regenTimer = 0f;
         }
         
@@ -37,11 +37,11 @@ public class PlayerHealth : MonoBehaviour, IHealth
     {
         if (damage < 0) return;
         
-        _playerStats.Acquire().CurrentHealth -= damage;
+        _player.Acquire().Stats.CurrentHealth -= damage;
         
-        OnDamage?.Invoke(damage, _playerStats.Acquire().CurrentHealth);
+        OnDamage?.Invoke(damage, _player.Acquire().Stats.CurrentHealth);
         
-        if (_playerStats.Acquire().CurrentHealth <= 0)
+        if (_player.Acquire().Stats.CurrentHealth <= 0)
         {
             OnDeath?.Invoke();
         }
@@ -51,13 +51,13 @@ public class PlayerHealth : MonoBehaviour, IHealth
     {
         if (heal < 0) return;
         
-        _playerStats.Acquire().CurrentHealth += heal;
+        _player.Acquire().Stats.CurrentHealth += heal;
 
-        if (_playerStats.Acquire().CurrentHealth > _playerStats.Acquire().MaxHealth)
+        if (_player.Acquire().Stats.CurrentHealth > _player.Acquire().Stats.MaxHealth)
         {
-            _playerStats.Acquire().CurrentHealth = _playerStats.Acquire().MaxHealth;
+            _player.Acquire().Stats.CurrentHealth = _player.Acquire().Stats.MaxHealth;
         }
         
-        OnHeal?.Invoke(heal, _playerStats.Acquire().CurrentHealth);
+        OnHeal?.Invoke(heal, _player.Acquire().Stats.CurrentHealth);
     }
 }
