@@ -15,4 +15,4 @@ MonoBehaviour:
   m_player: {fileID: 11400000, guid: 82693ae4365045f48abecdeb9b5c51e7, type: 2}
   m_modifierType: 1
   m_speedModifier: 1.02
-  m_weight: 1
+  m_weight: 2

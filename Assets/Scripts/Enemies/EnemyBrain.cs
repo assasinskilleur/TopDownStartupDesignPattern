@@ -22,6 +22,7 @@ public class EnemyBrain : MonoBehaviour
     private void OnDeath()
     {
         m_lootBag.InstantiateLoot(transform.position);
+        Destroy(gameObject);
     }
 
     private void Update()

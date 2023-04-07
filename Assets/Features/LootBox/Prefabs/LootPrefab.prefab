@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6689723103927429263}
   - component: {fileID: 5768421170695273480}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ GameObject:
   - component: {fileID: 8410680140829557307}
   - component: {fileID: 634265840365025545}
   - component: {fileID: 4851048205894003666}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LootPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
