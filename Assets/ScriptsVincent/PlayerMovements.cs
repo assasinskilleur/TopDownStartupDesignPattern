@@ -9,9 +9,9 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerMovements : MonoBehaviour
 {
+    [SerializeField] private PlayerStatsReference m_playerStats;
     [SerializeField] private RewindManagerReference m_rewind;
 
-    [SerializeField] private float m_speed;
     private Vector2 m_playerVelocity;
     private Vector2 m_directionInputs;
     private Rigidbody2D m_rb;
@@ -75,7 +75,7 @@ public class PlayerMovements : MonoBehaviour
 
     private void Move(Vector2 p_direction)
     {
-        m_playerVelocity = p_direction * m_speed;
+        m_playerVelocity = p_direction * m_playerStats.Acquire().Speed;
     }
 
     private void AddRewindMove(Vector3 p_direction)

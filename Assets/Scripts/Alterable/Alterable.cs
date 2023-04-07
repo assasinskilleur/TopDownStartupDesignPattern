@@ -30,6 +30,7 @@ public class Alterable<T>
     public Alterable(T initialValue)
     {
         startValue = initialValue;
+        _data = new List<Transformateur>();
     }
 
     public object AddTransformator(Func<T, T> method, int weight)
