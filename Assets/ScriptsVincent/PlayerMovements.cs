@@ -12,7 +12,9 @@ public class PlayerMovements : MonoBehaviour
     [SerializeField] private PlayerStatsReference m_playerStats;
     [SerializeField] private RewindManagerReference m_rewind;
 
-    private Vector2 m_playerVelocity;
+    [SerializeField] private float m_speed;
+    private Vector2 m_oldVelocity;
+    private Vector2 m_newPlayerVelocity;
     private Vector2 m_directionInputs;
     private Rigidbody2D m_rb;
 
@@ -34,17 +36,45 @@ public class PlayerMovements : MonoBehaviour
         m_rewind.Acquire().OnStopRewind -= OnStopRewind;
     }
 
+    private void Update()
+    {
+        
+    }
+
     private void FixedUpdate()
     {
-        m_rb.velocity = m_playerVelocity * Time.fixedDeltaTime;
+        if (RewindManager.IsRewind)
+        {
+            m_rb.velocity = m_newPlayerVelocity;
+        }
+        else
+        {
+            m_rb.velocity = m_newPlayerVelocity * Time.fixedDeltaTime;
+            if (!RewindManager.IsRewind)
+            {
+                m_currentDelay -= Time.fixedDeltaTime;
+                if (m_currentDelay <= 0)
+                {
+                    m_currentDelay = m_delaySavePos;
+                    RegisterPosition();
+                }
 
+                
+                
+            }
+        }
+    }
+
+    private void LateUpdate()
+    {
         if (!RewindManager.IsRewind)
         {
-            m_currentDelay -= Time.fixedDeltaTime;
-            if (m_currentDelay <= 0)
+            Debug.Log(m_oldVelocity + "   " + m_rb.velocity + "   " + (m_oldVelocity != m_rb.velocity));
+            if (m_oldVelocity != m_rb.velocity)
             {
-                m_currentDelay = m_delaySavePos;
-                RegisterPosition();
+                Debug.Log("AddRewind");
+                AddRewindMove(m_oldVelocity);
+                m_oldVelocity = m_rb.velocity;
             }
         }
     }
@@ -62,35 +92,34 @@ public class PlayerMovements : MonoBehaviour
         if (RewindManager.IsRewind)
             return;
 
-        Move(m_directionInputs);
-        AddRewindMove(l_oldDir);
+        Move(m_directionInputs * m_speed);
     }
     
     private void OnStopRewind()
     {
-        AddRewindMove(-m_playerVelocity.normalized);
+        AddRewindMove(-m_newPlayerVelocity.normalized);
         Move(m_directionInputs);
         AddRewindMove(m_directionInputs);
     }
 
-    private void Move(Vector2 p_direction)
+    private void Move(Vector2 p_velocity)
     {
-        m_playerVelocity = p_direction * m_playerStats.Acquire().Speed;
+        m_newPlayerVelocity = p_velocity;
     }
 
-    private void AddRewindMove(Vector3 p_direction)
+    private void AddRewindMove(Vector3 p_velocity)
     {
-        m_rewind.Acquire().AddAction(String.Concat("Move ", p_direction), () => Move(-p_direction));
+        m_rewind.AddAction(String.Concat("Move ", p_velocity), () => Move(-p_velocity));
     }
 
     private void RegisterPosition()
     {
-        Vector3 l_pos = transform.position;
-        m_rewind.Acquire().AddAction("Save Position", () => transform.position = l_pos);
+        // Vector3 l_pos = transform.position;
+        // m_rewind.AddAction("Save Position", () => transform.position = l_pos);
     }
 
     private void InvertVelocity()
     {
-        m_playerVelocity = -m_playerVelocity;
+        m_newPlayerVelocity = -m_newPlayerVelocity;
     }
 }

@@ -86,7 +86,6 @@ public class RewindManager : MonoBehaviour
         
         if (m_gameActions[^1].GameTime < MinGameTime)
         {
-            Debug.Log("Remove");
             m_gameActions.RemoveAt(m_gameActions.Count - 1);
             RemoveOldActions();
         }
