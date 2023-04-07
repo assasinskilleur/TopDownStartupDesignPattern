@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-    
-public class ShootOnClick : MonoBehaviour
+
+public class ShootOnClick : MonoBehaviour, IAttack
 {
     [SerializeField]
     private Pooler_v2 m_pooler;
@@ -14,12 +14,6 @@ public class ShootOnClick : MonoBehaviour
     private bool m_waitEndDelay;
     private int m_salveBulletShooted = 0;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -27,11 +21,12 @@ public class ShootOnClick : MonoBehaviour
 
         var l_angle = Mathf.Atan2(l_dir.y, l_dir.x) * Mathf.Rad2Deg;
         m_firepointParent.transform.rotation = Quaternion.AngleAxis(l_angle + 90, Vector3.forward);
-        
-        if (Input.GetKey(KeyCode.Mouse0))
+    }
+    
+    public void MakeAttack()
+    {
+        if (!m_waitEndDelay)
         {
-            if (m_waitEndDelay) { return; }
-            
             CallBullet();
         }
     }
