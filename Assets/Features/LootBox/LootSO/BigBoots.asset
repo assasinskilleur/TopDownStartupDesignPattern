@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de6157bcc6c58b641817b22c1d001fc3, type: 3}
+  m_Name: BigBoots
+  m_EditorClassIdentifier: 
+  m_lootSprite: {fileID: 21300000, guid: 605f9f45b48ef234fac03d87d63aa863, type: 3}
+  m_lootName: Big Boots
+  m_lootDescription: Big Boots
+  m_dropChance: 50
+  m_statsModifiers:
+  - {fileID: 11400000, guid: 8ae96fa32fc12ba4790ee218ca09dfa3, type: 2}
