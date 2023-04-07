@@ -169,7 +169,7 @@ MonoBehaviour:
   - {x: 0.2958265, y: -0.2958265, z: 0}
   m_ShapePathHash: 1522865524
   m_Mesh: {fileID: 0}
-  m_InstanceId: -90664
+  m_InstanceId: 68548
 --- !u!1 &2610850215357056001
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,8 +514,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e838b1944e45be4390d3e36f573c0c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_playerStats: {fileID: 0}
   m_rewind: {fileID: 0}
   m_speed: 300
+  m_physicsTransform: {fileID: 6882977646245493928}
   m_delaySavePos: 0.1
 --- !u!114 &3839843475403801076
 MonoBehaviour:

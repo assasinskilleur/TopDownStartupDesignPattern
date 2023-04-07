@@ -17,6 +17,7 @@ public class PlayerMovements : MonoBehaviour
     private Vector2 m_newPlayerVelocity;
     private Vector2 m_directionInputs;
     private Rigidbody2D m_rb;
+    private Collider2D[] m_colliders;
 
     [SerializeField]
     private float m_delaySavePos;
@@ -25,20 +26,16 @@ public class PlayerMovements : MonoBehaviour
     private void Start()
     {
         m_rb = GetComponent<Rigidbody2D>();
-        m_rewind.Acquire().OnLaunchRewind += InvertVelocity;
+        m_colliders = GetComponentsInChildren<Collider2D>();
+        m_rewind.Acquire().OnLaunchRewind += OnStartRewind;
         m_rewind.Acquire().OnStopRewind += OnStopRewind;
         m_currentDelay = m_delaySavePos;
     }
 
     private void OnDestroy()
     {
-        m_rewind.Acquire().OnLaunchRewind -= InvertVelocity;
+        m_rewind.Acquire().OnLaunchRewind -= OnStartRewind;
         m_rewind.Acquire().OnStopRewind -= OnStopRewind;
-    }
-
-    private void Update()
-    {
-        
     }
 
     private void FixedUpdate()
@@ -69,7 +66,6 @@ public class PlayerMovements : MonoBehaviour
     {
         if (!RewindManager.IsRewind)
         {
-            Debug.Log(m_oldVelocity + "   " + m_rb.velocity + "   " + (m_oldVelocity != m_rb.velocity));
             if (m_oldVelocity != m_rb.velocity)
             {
                 Debug.Log("AddRewind");
@@ -86,20 +82,31 @@ public class PlayerMovements : MonoBehaviour
 
     private void GetMovementInputs(InputAction.CallbackContext p_context)
     {
-        Debug.Log("Inputs");
-        Vector2 l_oldDir = m_directionInputs;
         m_directionInputs = p_context.ReadValue<Vector2>();
         if (RewindManager.IsRewind)
             return;
 
         Move(m_directionInputs * m_speed);
     }
+
+    private void OnStartRewind()
+    {
+        Move(-m_rb.velocity);
+        foreach (Collider2D l_col in m_colliders)
+        {
+            l_col.enabled = false;
+        }
+    }
     
     private void OnStopRewind()
     {
-        AddRewindMove(-m_newPlayerVelocity.normalized);
-        Move(m_directionInputs);
-        AddRewindMove(m_directionInputs);
+        foreach (Collider2D l_col in m_colliders)
+        {
+            l_col.enabled = true;
+        }
+        AddRewindMove(-m_newPlayerVelocity);
+        Move(m_directionInputs * m_speed);
+        AddRewindMove(m_newPlayerVelocity);
     }
 
     private void Move(Vector2 p_velocity)
@@ -109,17 +116,12 @@ public class PlayerMovements : MonoBehaviour
 
     private void AddRewindMove(Vector3 p_velocity)
     {
-        m_rewind.AddAction(String.Concat("Move ", p_velocity), () => Move(-p_velocity));
+        m_rewind.Acquire().AddAction(String.Concat("Move ", p_velocity), () => Move(-p_velocity));
     }
 
     private void RegisterPosition()
     {
-        // Vector3 l_pos = transform.position;
-        // m_rewind.AddAction("Save Position", () => transform.position = l_pos);
-    }
-
-    private void InvertVelocity()
-    {
-        m_newPlayerVelocity = -m_newPlayerVelocity;
+        Vector3 l_pos = transform.position;
+        m_rewind.Acquire().AddAction("Save Position", () => transform.position = l_pos);
     }
 }
