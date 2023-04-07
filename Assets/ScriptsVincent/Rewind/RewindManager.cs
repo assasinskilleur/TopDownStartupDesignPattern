@@ -83,12 +83,12 @@ public class RewindManager : MonoBehaviour
 
     private void RemoveOldActions()
     {
-        if (IsRewind || !m_gameActions.Any())
+        if (IsRewind)
         {
             return;
         }
 
-        while (m_gameActions[^1].GameTime < MinGameTime)
+        while (m_gameActions.Any() && m_gameActions[^1].GameTime < MinGameTime )
         {
             m_gameActions.RemoveAt(m_gameActions.Count - 1);
         }
