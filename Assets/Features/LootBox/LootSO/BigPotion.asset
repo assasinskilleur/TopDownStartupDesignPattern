@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de6157bcc6c58b641817b22c1d001fc3, type: 3}
-  m_Name: SmallBoots
+  m_Name: BigPotion
   m_EditorClassIdentifier: 
-  m_lootSprite: {fileID: 21300000, guid: ffde51322dab16f4c9d840a10b8806f4, type: 3}
-  m_lootName: Boots
-  m_lootDescription: Small Boots
-  m_dropChance: 100
+  m_lootSprite: {fileID: 1536469125, guid: bb99982bf5bb4c54d85d53df1cd09991, type: 3}
+  m_lootName: BigPotion
+  m_lootDescription: BigPotion
+  m_dropChance: 20
   m_statsModifiers:
-  - {fileID: 11400000, guid: afe8de91780beed4ea752a9701a65a54, type: 2}
+  - {fileID: 11400000, guid: e54600cd9979df740b2023be82a2cb03, type: 2}

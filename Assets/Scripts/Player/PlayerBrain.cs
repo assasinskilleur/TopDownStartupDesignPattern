@@ -15,16 +15,27 @@ public class PlayerBrain : MonoBehaviour
     public Movements Movements => m_movements;
     public PlayerHealth Health => m_playerHealth;
     public PlayerStats Stats => m_playerStats;
+    
+    private float m_isShooting;
 
     private void Awake()
     {
         (m_playerReference as IReferenceHead<PlayerBrain>).Set(this);
+        
+        m_playerHealth.OnDamage += (damage, health) => Debug.Log($"Player took {damage} damage, current health: {health}");
+    }
+
+    private void Update()
+    {
+        if (m_isShooting > .1 && !RewindManager.IsRewind)
+            m_shootOnClick.MakeAttack();
     }
 
     public void RegisterInputs(InputActions p_inputActions)
     {
         p_inputActions.Player.Direction.performed += GetMovementInputs;
-        p_inputActions.Player.Shoot.performed += GetShootInputs;
+        p_inputActions.Player.Shoot.started += GetShootInputs;
+        p_inputActions.Player.Shoot.canceled += GetShootInputs;
     }
 
     private void GetMovementInputs(InputAction.CallbackContext p_context)
@@ -41,6 +52,6 @@ public class PlayerBrain : MonoBehaviour
         if (RewindManager.IsRewind)
             return;
 
-        m_shootOnClick.MakeAttack();
+        m_isShooting = obj.ReadValue<float>();
     }
 }

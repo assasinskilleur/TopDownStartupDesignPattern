@@ -16,6 +16,7 @@ public class EnemyHealth : MonoBehaviour, IHealth
     private void Awake()
     {
         m_currentHealth = m_maxHealth;
+        OnDamage += (damage, health) => Debug.Log($"Enemy took {damage} damage, current health: {health}");
     }
 
     public bool IsPlayer()

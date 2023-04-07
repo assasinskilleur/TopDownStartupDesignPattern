@@ -11,6 +11,19 @@ public class EnemyBrain : MonoBehaviour
 
     [SerializeField] private PlayerReference m_playerReference;
 
+    [SerializeField] private EnemyHealth m_enemyHealth;
+    [SerializeField] private LootBag m_lootBag;
+    
+    private void Start()
+    {
+        m_enemyHealth.OnDeath += OnDeath;
+    }
+
+    private void OnDeath()
+    {
+        m_lootBag.InstantiateLoot(transform.position);
+    }
+
     private void Update()
     {
         if (!RewindManager.IsRewind)

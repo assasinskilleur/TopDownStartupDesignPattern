@@ -14,29 +14,10 @@ public class Turrets : MonoBehaviour
     private bool m_isOut = false;
     private bool m_waitEndDelay = false;
 
-    [SerializeField] private int m_maxHealth;
-    private int m_currentHealth;
-
-    public int CurrentHealth
-    {
-        get
-        {
-            //Some other code
-            return m_currentHealth;
-        }
-        set
-        {
-            //Some other code
-            m_currentHealth = value;
-        }
-    }
-
     // Start is called before the first frame update
     void Start()
     {
         m_player = null;
-
-        m_maxHealth = CurrentHealth;
     }
 
     // Update is called once per frame
@@ -59,7 +40,6 @@ public class Turrets : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("ee");
         if (collision.TryGetComponent(out IHealth l_health))
         {
             if(m_player == null)
@@ -77,16 +57,6 @@ public class Turrets : MonoBehaviour
         {
             m_head.localRotation = Quaternion.Euler(0, 0, 0);
             m_isOut = true;
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        CurrentHealth -= 1;
-        
-        if(CurrentHealth <= 0)
-        {
-            Destroy(gameObject);
         }
     }
 

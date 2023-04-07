@@ -66,8 +66,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   droppedItemPrefab: {fileID: 5464987534815012113, guid: fcf4ec3464441ce4980820c94305f68d, type: 3}
   m_loots:
-  - {fileID: 11400000, guid: b0f20d028106d0b42a07b489da370c8c, type: 2}
-  - {fileID: 11400000, guid: aaf059cd083e3b54ab2804167497a79e, type: 2}
+  - {fileID: 11400000, guid: b98b1cb1d9d20ec4e8454529acfe6b09, type: 2}
+  - {fileID: 11400000, guid: abee59d31f1b7fe4da15e202eea54ef3, type: 2}
+  - {fileID: 11400000, guid: b58ede0a77a841848b1a197cb8318ac9, type: 2}
+  - {fileID: 11400000, guid: 37f9da917a0accb458b49fe1834775e9, type: 2}
+  - {fileID: 11400000, guid: b352e9c8a04d9b449a634c98df09306e, type: 2}
+  - {fileID: 11400000, guid: 8a440f1d726e1d14da20b9de319a42bc, type: 2}
+  - {fileID: 11400000, guid: 712d34ec2abf5564bbca5d4cff4b868f, type: 2}
 --- !u!212 &3463746417196602756
 SpriteRenderer:
   m_ObjectHideFlags: 0

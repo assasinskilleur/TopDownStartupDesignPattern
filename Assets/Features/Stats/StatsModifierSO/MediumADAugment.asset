@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cef74b5ec43fa314b81775d03767f8bb, type: 3}
-  m_Name: FiftyPercentSpeedAugment
+  m_Script: {fileID: 11500000, guid: 98fb5a2653cfd9f4f9cd3c0969b89580, type: 3}
+  m_Name: MediumADAugment
   m_EditorClassIdentifier: 
   m_player: {fileID: 11400000, guid: 82693ae4365045f48abecdeb9b5c51e7, type: 2}
   m_modifierType: 1
-  m_speedModifier: 1.5
-  m_weight: 1
+  m_damageModifier: 1.5
+  m_weight: 2

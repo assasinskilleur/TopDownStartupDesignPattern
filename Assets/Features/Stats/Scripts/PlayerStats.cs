@@ -13,6 +13,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float m_baseHealth;
     [SerializeField] private float m_baseRegen;
     [SerializeField] private float m_baseDamage;
+    [SerializeField] private float m_baseAttackSpeed;
 
     #endregion
 
@@ -24,6 +25,7 @@ public class PlayerStats : MonoBehaviour
         m_maxHealth = new Alterable<float>(m_baseHealth);
         m_regen = new Alterable<float>(m_baseRegen);
         m_damage = new Alterable<float>(m_baseDamage);
+        m_attackSpeed = new Alterable<float>(m_baseAttackSpeed);
         
         m_health = m_maxHealth.CalculateValue();
     }
@@ -186,6 +188,44 @@ public class PlayerStats : MonoBehaviour
         m_speedModifiers.Add(l_speedModifier);
     }
 
+    #endregion
+    
+    #region AttackSpeed
+    
+    private Alterable<float> m_attackSpeed;
+    
+    private List<object> m_attackSpeedModifiers = new List<object>();
+    
+    public float AttackSpeed => m_attackSpeed.CalculateValue();
+    
+    public void AddAttackSpeedModifier(float p_value, int p_weight = 0, StatsModifierType p_modifierType = StatsModifierType.TotalMultiplicative, Func<float, float> p_modifierFunc = null)
+    {
+        object l_attackSpeedModifier;
+        switch (p_modifierType)
+        {
+            case StatsModifierType.TotalMultiplicative:
+                l_attackSpeedModifier = m_attackSpeed.AddTransformator(asp => asp * p_value, p_weight);
+                break;
+            case StatsModifierType.Override:
+                l_attackSpeedModifier = m_attackSpeed.AddTransformator(asp => p_value, p_weight);
+                break;
+            case StatsModifierType.BaseAdditive:
+                l_attackSpeedModifier = m_attackSpeed.AddTransformator(asp => asp + m_baseAttackSpeed + p_value, p_weight);
+                break;
+            case StatsModifierType.BaseMultiplicative:
+                l_attackSpeedModifier = m_attackSpeed.AddTransformator(asp => asp * (m_baseAttackSpeed * p_value), p_weight);
+                break;
+            case StatsModifierType.Other:
+                l_attackSpeedModifier = m_attackSpeed.AddTransformator(p_modifierFunc, p_weight);
+                break;
+            default:
+                l_attackSpeedModifier = m_attackSpeed.AddTransformator(asp => asp + p_value, p_weight);
+                break;
+        }
+        
+        m_attackSpeedModifiers.Add(l_attackSpeedModifier);
+    }
+    
     #endregion
 }
 

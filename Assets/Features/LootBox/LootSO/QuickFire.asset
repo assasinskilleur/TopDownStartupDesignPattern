@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de6157bcc6c58b641817b22c1d001fc3, type: 3}
-  m_Name: BigBoots
+  m_Name: QuickFire
   m_EditorClassIdentifier: 
-  m_lootSprite: {fileID: 21300000, guid: 605f9f45b48ef234fac03d87d63aa863, type: 3}
-  m_lootName: Big Boots
-  m_lootDescription: Big Boots
-  m_dropChance: 50
+  m_lootSprite: {fileID: 21300000, guid: 699f2e7243b258d46a6f96f206db9cf7, type: 3}
+  m_lootName: ASR
+  m_lootDescription: ASR
+  m_dropChance: 100
   m_statsModifiers:
-  - {fileID: 11400000, guid: 8ae96fa32fc12ba4790ee218ca09dfa3, type: 2}
+  - {fileID: 11400000, guid: bd4a23061508fbe418a4802809eb1813, type: 2}

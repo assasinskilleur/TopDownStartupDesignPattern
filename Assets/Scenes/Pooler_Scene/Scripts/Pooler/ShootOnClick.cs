@@ -9,7 +9,8 @@ public class ShootOnClick : MonoBehaviour, IAttack
     [SerializeField] private Camera m_camera;
     [SerializeField] private Transform m_firepointParent;
     [SerializeField] private GameObject m_firepoint;
-    [SerializeField] private float m_delayBullet = 1f;
+    
+    [SerializeField] private PlayerReference m_playerReference;
 
     private bool m_waitEndDelay;
     private int m_salveBulletShooted = 0;
@@ -37,23 +38,14 @@ public class ShootOnClick : MonoBehaviour, IAttack
 
         m_salveBulletShooted++;
 
-        if (m_salveBulletShooted >= 10)
-        {
-            GameObject l_obj = m_pooler.ActiveObj(m_firepoint);
-            l_obj.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
-
-            m_salveBulletShooted = 0;
-        }
-        else
-        {
-            m_pooler.ActiveObj(m_firepoint);
-        }
+        GameObject l_obj = m_pooler.ActiveObj(m_firepoint);
+        l_obj.transform.parent = null;
         
         StartCoroutine(DelayBullet());
     }
     IEnumerator DelayBullet()
     {
-        yield return new WaitForSeconds(m_delayBullet);
+        yield return new WaitForSeconds(m_playerReference.Acquire().Stats.AttackSpeed);
         m_waitEndDelay = false;
     }
 }
