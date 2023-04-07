@@ -15,8 +15,9 @@ public class RewindManager : MonoBehaviour
     public event Action OnStopRewind;
 
     public event Action<float> OnUpdateRewind;
-    
-    [SerializeField][ReadOnly]
+
+    [SerializeField]
+    [ReadOnly]
     private List<GameAction> m_gameActions;
     [SerializeField] private float m_maxTimeRewind;
     [SerializeField] private RewindManagerReference m_reference;
@@ -54,42 +55,44 @@ public class RewindManager : MonoBehaviour
 
     private void Update()
     {
-        switch (IsRewind)
+
+        if (IsRewind)
         {
-            case false :
-                m_gameTime += Time.deltaTime;
-                if (m_gameTime > m_maxGameTimeReached)
-                {
-                    m_maxGameTimeReached = m_gameTime;
-                    RemoveOldActions();
-                }
-                break;
-            
-            case true:
-                m_gameTime -= Time.deltaTime;
-                if (m_gameTime < MinGameTime)
-                {
-                    IsRewind = false;
-                    break;
-                }
-                Rewind();
-                break;
+            m_gameTime += Time.deltaTime;
+            if (m_gameTime > m_maxGameTimeReached)
+            {
+                m_maxGameTimeReached = m_gameTime;
+                RemoveOldActions();
+            }
+
         }
+        else
+        {
+            m_gameTime -= Time.deltaTime;
+            if (m_gameTime < MinGameTime)
+            {
+                IsRewind = false;
+            }
+            Rewind();
+
+        }
+
         OnUpdateRewind?.Invoke(CurrentRewindState);
     }
-    
+
 
     private void RemoveOldActions()
     {
         if (IsRewind || !m_gameActions.Any())
-            return;
-        
-        if (m_gameActions[^1].GameTime < MinGameTime)
         {
-            Debug.Log("Remove");
-            m_gameActions.RemoveAt(m_gameActions.Count - 1);
-            RemoveOldActions();
+            return;
         }
+
+        while (m_gameActions[^1].GameTime < MinGameTime)
+        {
+            m_gameActions.RemoveAt(m_gameActions.Count - 1);
+        }
+
     }
 
     public void RegisterInputs(InputActions p_inputs)
@@ -107,7 +110,7 @@ public class RewindManager : MonoBehaviour
         l_gameAction.GameTime = m_gameTime;
         l_gameAction.A += p_action;
 
-        m_gameActions.Insert(0,l_gameAction);
+        m_gameActions.Insert(0, l_gameAction);
     }
 
     private void StartRewind(InputAction.CallbackContext p_context)
@@ -125,17 +128,17 @@ public class RewindManager : MonoBehaviour
     {
         PlayLastAction();
     }
-    
+
     private void PlayLastAction()
     {
         if (!m_gameActions.Any()
             || m_gameActions[0].GameTime < m_gameTime)
             return;
-        
+
         m_gameActions[0].Play();
         m_gameActions.RemoveAt(0);
         PlayLastAction();
-        
+
     }
 
     private void EndRewind(InputAction.CallbackContext p_context)
@@ -143,7 +146,7 @@ public class RewindManager : MonoBehaviour
         IsRewind = false;
         OnEndRewind();
     }
-    
+
     private void OnEndRewind()
     {
         OnStopRewind?.Invoke();
