@@ -19,12 +19,13 @@ public class LootBox : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log(col.name);
-        if (col.TryGetComponent(out PlayerHealthProxy playerHealthProxy))
+        if (col.TryGetComponent(out HealthProxy playerHealthProxy))
         {
-            m_spriteRenderer.sprite = m_openedSprite;
-            m_boxCollider2D.enabled = false;
-            m_lootBag.InstantiateLoot(transform.position);
+            if (playerHealthProxy.IsPlayer()) {
+                m_spriteRenderer.sprite = m_openedSprite;
+                m_boxCollider2D.enabled = false;
+                m_lootBag.InstantiateLoot(transform.position);
+            }
         }
     }
 }

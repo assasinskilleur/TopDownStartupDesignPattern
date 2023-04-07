@@ -33,6 +33,11 @@ public class PlayerHealth : MonoBehaviour, IHealth
         _regenTimer += Time.deltaTime;
     }
 
+    public bool IsPlayer()
+    {
+        return true;
+    }
+
     public void TakeDamage(float damage)
     {
         if (damage < 0) return;

@@ -18,13 +18,17 @@ public class DroppedLoot : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.TryGetComponent(out PlayerHealthProxy playerStats))
+        if (other.TryGetComponent(out HealthProxy playerStats))
         {
-            foreach (var statsModifier in m_loot.GetStatsModifiers())
+            if (playerStats.IsPlayer())
             {
-                statsModifier.ApplyModifier();
+                foreach (var statsModifier in m_loot.GetStatsModifiers())
+                {
+                    statsModifier.ApplyModifier();
+                }
+
+                Destroy(gameObject);
             }
-            Destroy(gameObject);
         }
     }
 }

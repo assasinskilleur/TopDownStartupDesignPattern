@@ -7,13 +7,12 @@ using UnityEngine.InputSystem;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
-public class PlayerMovements : MonoBehaviour, IRewindable
+public class Movements : MonoBehaviour, IRewindable
 {
     [SerializeField] private RewindManagerReference m_rewind;
 
-    [SerializeField] private float m_speed;
     private Vector2 m_oldVelocity;
-    private Vector2 m_newPlayerVelocity;
+    private Vector2 m_newVelocity;
     private Vector2 m_directionInputs;
     private Rigidbody2D m_rb;
     private Collider2D[] m_colliders;
@@ -41,11 +40,12 @@ public class PlayerMovements : MonoBehaviour, IRewindable
     {
         if (RewindManager.IsRewind)
         {
-            m_rb.velocity = m_newPlayerVelocity;
+            m_rb.velocity = m_newVelocity;
         }
         else
         {
-            m_rb.velocity = m_newPlayerVelocity * Time.fixedDeltaTime;
+            m_rb.velocity = m_newVelocity * Time.fixedDeltaTime;
+            
             if (!RewindManager.IsRewind)
             {
                 m_currentDelay -= Time.fixedDeltaTime;
@@ -64,25 +64,10 @@ public class PlayerMovements : MonoBehaviour, IRewindable
         {
             if (m_oldVelocity != m_rb.velocity)
             {
-                Debug.Log("AddRewind");
                 AddRewindAction(m_oldVelocity);
                 m_oldVelocity = m_rb.velocity;
             }
         }
-    }
-
-    public void RegisterInputs(InputActions p_inputActions)
-    {
-        p_inputActions.Player.Direction.performed += GetMovementInputs;
-    }
-
-    private void GetMovementInputs(InputAction.CallbackContext p_context)
-    {
-        m_directionInputs = p_context.ReadValue<Vector2>();
-        if (RewindManager.IsRewind)
-            return;
-
-        Move(m_directionInputs * m_speed);
     }
 
     public void OnStartRewind()
@@ -100,14 +85,14 @@ public class PlayerMovements : MonoBehaviour, IRewindable
         {
             l_col.enabled = true;
         }
-        AddRewindAction(-m_newPlayerVelocity);
-        Move(m_directionInputs * m_speed);
-        AddRewindAction(m_newPlayerVelocity);
+        AddRewindAction(-m_newVelocity);
+        Move(m_directionInputs);
+        AddRewindAction(m_newVelocity);
     }
 
-    private void Move(Vector2 p_velocity)
+    public void Move(Vector2 p_velocity)
     {
-        m_newPlayerVelocity = p_velocity;
+        m_newVelocity = p_velocity;
     }
 
     public void AddRewindAction(object p_velocity)

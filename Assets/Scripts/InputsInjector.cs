@@ -13,7 +13,7 @@ public class InputsInjector : MonoBehaviour
     }
 
     private InputActions m_inputs;
-    [SerializeField] private PlayerMovements m_playerMovements;
+    [SerializeField] private PlayerReference m_player;
     [SerializeField] private RewindManagerReference m_rewindManager;
     [SerializeField] private UI m_ui;
     
@@ -21,7 +21,7 @@ public class InputsInjector : MonoBehaviour
     {
         m_inputs = new InputActions();
         m_inputs.Enable();
-        m_playerMovements.RegisterInputs(m_inputs);
+        m_player.Acquire().RegisterInputs(m_inputs);
         m_rewindManager.Acquire().RegisterInputs(m_inputs);
         m_ui.ChangeInput += SwitchInput;
         m_ui.RegisterInputs(m_inputs);

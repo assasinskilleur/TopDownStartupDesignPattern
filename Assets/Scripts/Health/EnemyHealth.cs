@@ -12,6 +12,16 @@ public class EnemyHealth : MonoBehaviour, IHealth
     public event Action<float, float> OnHeal;
     
     private float m_currentHealth;
+    
+    private void Awake()
+    {
+        m_currentHealth = m_maxHealth;
+    }
+
+    public bool IsPlayer()
+    {
+        return false;
+    }
 
     public void TakeDamage(float damage)
     {
