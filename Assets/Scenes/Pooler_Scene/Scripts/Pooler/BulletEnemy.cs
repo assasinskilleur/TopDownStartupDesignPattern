@@ -24,7 +24,8 @@ public class BulletEnemy : MonoBehaviour
 
     private void OnDisable()
     {
-        m_pooler = transform.parent.GetComponent<Pooler_v2>();
+        if (transform.parent != null)
+            m_pooler = transform.parent.GetComponent<Pooler_v2>();
     }
 
     // Start is called before the first frame update
